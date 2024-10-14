@@ -21,6 +21,11 @@ class Authentication extends Category {
     await ChromeSafariBrowser().open(url: url);
   }
 
+  void authorizeApplicationWithTokens({required String accessToken, required String refreshToken}) {
+    _manager._accessToken = accessToken;
+    _manager._refreshToken = refreshToken;
+  }
+
   /// Use the authorization code GET parameter sent back to your redirect_uri to get an access_token.
   ///
   /// Save the access_token so your app can authenticate the user by sending the Authorization header.
