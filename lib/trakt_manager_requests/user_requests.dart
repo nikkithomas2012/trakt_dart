@@ -473,14 +473,14 @@ class Users extends Category {
   ///
   /// 🔓 OAuth Optional 📄 Pagination Optional ✨ Extended Info 😁 Emojis
   Future<List<ListItem>> getListItems(
-    int id,
+    String id,
     String listId, {
     bool useOAuth = false,
     ListType? listType,
     RequestPagination? pagination,
     bool extendedFull = false,
   }) async {
-    var request = "users/$id/lists/$listId";
+    var request = "users/$id/lists/$listId/items";
     if (listType != null) {
       request = "$request/${listType.value}";
     }
