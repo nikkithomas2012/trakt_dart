@@ -11,16 +11,6 @@ part of trakt_dart;
 class Authentication extends Category {
   Authentication(TraktManager manager) : super(manager);
 
-  /// Construct then redirect to this URL.
-  ///
-  /// The Trakt website will request permissions for your app, which the user needs to approve.
-  /// If the user isn't signed into Trakt, it will ask them to do so.
-  /// Send signup=true if you prefer the account sign up page to be the default.
-  Future<void> authorizeApplication({bool? signup}) async {
-    final url = Uri.parse(_manager._oauthURL);
-    await ChromeSafariBrowser().open(url: url);
-  }
-
   void authorizeApplicationWithTokens({required String accessToken, required String refreshToken}) {
     _manager._accessToken = accessToken;
     _manager._refreshToken = refreshToken;
@@ -75,12 +65,7 @@ class Authentication extends Category {
 
   Future<AccessTokenResponse> _oauthToken(Map<String, String> body) async {
     final url = Uri.https(_manager._baseURL, "oauth/token");
-    body.addAll({
-      "client_id": _manager._clientId!,
-      "client_secret": _manager._clientSecret!,
-      "redirect_uri": _manager._redirectURI!,
-      "grant_type": "authorization_code"
-    });
+    body.addAll({"client_id": _manager._clientId!, "client_secret": _manager._clientSecret!, "redirect_uri": _manager._redirectURI!, "grant_type": "authorization_code"});
     final response = await _manager.client.post(url, headers: {"Content-Type": "application/json"}, body: body);
 
     if (![200, 201, 204].contains(response.statusCode)) {
@@ -102,8 +87,7 @@ class Authentication extends Category {
   /// The user_code and verification_url should be presented to the user as mentioned in the flow steps above.
   Future<DeviceCodeResponse> generateDeviceCodes({bool? signup}) async {
     final url = Uri.https(_manager._baseURL, "oauth/device/code");
-    final response = await _manager.client
-        .post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode({"client_id": _manager._clientId}));
+    final response = await _manager.client.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode({"client_id": _manager._clientId}));
 
     if (![200, 201, 204].contains(response.statusCode)) {
       throw TraktManagerAPIError(response.statusCode, response.reasonPhrase, response);

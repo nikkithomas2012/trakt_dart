@@ -12,7 +12,6 @@ dependencies:
   dotenv: ^4.1.0
   flutter:
     sdk: flutter
-  flutter_inappwebview: ^5.7.2+3
   http: ^1.1.0
   json_annotation: ^4.8.1
   json_serializable: ^6.7.1

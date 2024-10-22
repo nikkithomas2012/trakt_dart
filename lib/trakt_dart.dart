@@ -2,7 +2,6 @@ library trakt_dart;
 
 import 'dart:convert';
 
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:http/http.dart' show Client, Response;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:tuple/tuple.dart';
@@ -58,7 +57,6 @@ class TraktManager {
   String? _clientSecret;
   String? _redirectURI;
   String _baseURL = "api.trakt.tv";
-  late String _oauthURL;
   String? _accessToken;
   String? _refreshToken;
   Map<String, String> _headers = {};
@@ -113,9 +111,7 @@ class TraktManager {
   /// [clientSecret] - The Client secret listed under your Trakt applications
   /// [redirectURI] - the redirect uri set under your Trakt applications for OAuth.
   /// [useStaging] - whether to use the Trakt Staging environment. Default to false.
-  TraktManager(
-      {required String clientId, required String clientSecret, required String redirectURI, bool useStaging = false})
-      : client = Client() {
+  TraktManager({required String clientId, required String clientSecret, required String redirectURI, bool useStaging = false}) : client = Client() {
     _clientId = clientId;
     _clientSecret = clientSecret;
     _redirectURI = redirectURI;
@@ -125,8 +121,6 @@ class TraktManager {
     if (useStaging) {
       _baseURL = "api-staging.trakt.tv";
     }
-
-    _oauthURL = "https://trakt.tv/oauth/authorize?response_type=code&client_id=$_clientId&redirect_uri=$_redirectURI";
 
     _authentication = Authentication(this);
     _calendar = Calendar(this);
@@ -150,11 +144,7 @@ class TraktManager {
     _sync = Sync(this);
   }
 
-  Future<T> _get<T>(String request,
-      {bool extendedFull = false,
-      bool includeGuestStars = false,
-      RequestPagination? pagination,
-      Map<String, dynamic>? queryParamameters}) async {
+  Future<T> _get<T>(String request, {bool extendedFull = false, bool includeGuestStars = false, RequestPagination? pagination, Map<String, dynamic>? queryParamameters}) async {
     final queryParams = queryParamameters ?? {};
     queryParams.addAll(pagination?.toMap() ?? {});
 
@@ -180,8 +170,7 @@ class TraktManager {
     return (T).jsonDecoder(jsonResult);
   }
 
-  Future<T> _authenticatedGet<T>(String request,
-      {bool extendedFull = false, Map<String, dynamic>? queryParamameters}) async {
+  Future<T> _authenticatedGet<T>(String request, {bool extendedFull = false, Map<String, dynamic>? queryParamameters}) async {
     assert(_accessToken != null, "Autheticate app and get access token before making authenticated request.");
 
     final queryParams = queryParamameters ?? {};
@@ -202,11 +191,7 @@ class TraktManager {
     return (T).jsonDecoder(jsonResult);
   }
 
-  Future<List<T>> _getList<T>(String request,
-      {bool extendedFull = false,
-      RequestPagination? pagination,
-      Filters? filters,
-      Map<String, dynamic>? queryParamameters}) async {
+  Future<List<T>> _getList<T>(String request, {bool extendedFull = false, RequestPagination? pagination, Filters? filters, Map<String, dynamic>? queryParamameters}) async {
     final queryParams = queryParamameters ?? {};
 
     queryParams.addAll(pagination?.toMap() ?? {});
@@ -231,11 +216,7 @@ class TraktManager {
     return [];
   }
 
-  Future<List<T>> _authenticatedGetList<T>(String request,
-      {bool extendedFull = false,
-      RequestPagination? pagination,
-      Filters? filters,
-      Map<String, dynamic>? queryParamameters}) async {
+  Future<List<T>> _authenticatedGetList<T>(String request, {bool extendedFull = false, RequestPagination? pagination, Filters? filters, Map<String, dynamic>? queryParamameters}) async {
     final queryParams = queryParamameters ?? {};
 
     queryParams.addAll(pagination?.toMap() ?? {});
